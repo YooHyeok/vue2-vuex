@@ -1,7 +1,10 @@
 <template>
   <div>
-    <h1>All Users: {{/*$store.state.allUsers.length*/ $store.getters.allUsersCount}}</h1>
-    <h3>Seoul Users: {{$store.getters.countOfSeoul}} ({{ $store.getters.percentOfSeoul }})%</h3>
+    <!-- <h1>All Users: {{$store.state.allUsers.length }}</h1> -->
+    <!-- <h1>All Users: {{$store.getters.allUsersCount }}</h1> -->
+    <h1>All Users: {{allUsersCount }}</h1>
+    <!-- <h3>Seoul Users: {{$store.getters.countOfSeoul}} ({{ $store.getters.percentOfSeoul }})%</h3> -->
+    <h3>Seoul Users: {{countOfSeoul}} ({{ percentOfSeoul }})%</h3>
     <v-list two-line>
       <v-list-tile 
         v-for=" (user, index) in $store.state.allUsers /*allUsers*/ "
@@ -24,6 +27,7 @@
 
 <script>
 import { EventBus } from '@/main.js'
+import { mapGetters } from 'vuex'
   export default {
     data() {
       return {
@@ -33,6 +37,9 @@ import { EventBus } from '@/main.js'
           {userId: 'lego123', password: '789', name: 'Lego', address: 'Busan', src:'https://goo.gl/x7SpCD'}
         ]
       }
+    },
+    computed: {
+      ...mapGetters(['allUsersCount', 'countOfSeoul', 'percentOfSeoul'])
     },
     mounted() {
       EventBus.$on('signUp', users => {
