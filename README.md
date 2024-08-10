@@ -12,38 +12,86 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
-  state: {
-
-  },
-  mutations: {
-
-  },
-  actions: {
-
-  }
+  state: {},
+  getters: {},
+  mutations: {},
+  actions: {}
 })
 
 ```
 
 - ### `state`  
   vue 인스턴스에서의 data와 같은 역할을 해준다.  
-  .vue 파일에서 $store.state.{변수명}을 통해 접근 가능하다.
+  ```js
+  import Vue from 'vue'
+  import Vuex from 'vuex'
 
+  Vue.use(Vuex)
+
+  export default new Vuex.Store({
+    state: {
+      dataList: ["데이터1","데이터2","데이터3"]
+    },
+  })
+
+  ```
+  .vue 파일에서 $store.state.{변수명}을 통해 접근 가능하다.
   ```vue
   <script>
   export default {
     computed: {
       allUsers:() {
-        return this.$store.state.allUsers;
+        return this.$store.state.dataList;
       }
     },
     methods: {
       signUp() {
-        this.$store.commit('ADD_USER', user);
+        this.$store.state.dataList.push(user);
       }
     }
   }
   </script>
   ```
+- ### `getters`  
+  중앙 통제 관리 저장소 구조에서 발생할 수 있는 흔한 문제점 중 하나로 컴포넌트에서 vuex의 데이터에 접근할 때 중복된 코드를 반복 호출하게 되며, 이를 위해서 Getters 라는 것이 존재한다.  
+  ```vue
+  <template>
+    <div>
+      <h1>{{$store.state.dataList.length}}</h1>
+    </div>
+  </template
+  ```
+  위 코드가 특정 컴포넌트들 에서 반복되서 사용된다.  
+  이렇게 반복된 코드를 줄여줄 수 있는, 즉 간단한 계산식을 캐싱해 주는 것  
+  바로 `computed`라는 속성이 있다.
+  이 `computed`과 같은 역할을 해주는 것이 바로 `Getters` 이다.
+  ```js
+  import Vue from 'vue'
+  import Vuex from 'vuex'
+
+  Vue.use(Vuex)
+
+  export default new Vuex.Store({
+    state: {
+      dataList: ["데이터1","데이터2","데이터3"]
+    },
+    getters: {
+      // dataCnt: function(state) {
+      dataCnt: function(state) {
+        return state.dataList.length
+      }
+    },
+  })
+  ```
+  .vue 파일에서 $store.getters.{변수명}을 통해 접근 가능하다.
+  ```vue
+  <template>
+    <div>
+      <h1>All Users{{/*$store.state.dataList.length*/ $store.getters.dataCnt}}</h1>
+    </div>
+  </template>
+  ```
+
+
 - mutation: 
 - action: 
