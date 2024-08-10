@@ -1,6 +1,7 @@
 <template>
   <div>
     <h1>All Users: {{/*$store.state.allUsers.length*/ $store.getters.allUsersCount}}</h1>
+    <h3>Seoul Users: {{$store.getters.countOfSeoul}} ({{ $store.getters.percentOfSeoul }})%</h3>
     <v-list two-line>
       <v-list-tile 
         v-for=" (user, index) in $store.state.allUsers /*allUsers*/ "
