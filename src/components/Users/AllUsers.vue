@@ -7,7 +7,7 @@
     <h3>Seoul Users: {{countOfSeoul}} ({{ percentOfSeoul }})%</h3>
     <v-list two-line>
       <v-list-tile 
-        v-for=" (user, index) in $store.state.allUsers /*allUsers*/ "
+        v-for=" (user, index) in /*$store.state.allUsers*/ allUsers /* data가 아닌 mapState로 store state 접근 */ "
         :key="index"
         avatar
       >
@@ -27,7 +27,7 @@
 
 <script>
 import { EventBus } from '@/main.js'
-import { mapGetters } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
   export default {
     data() {
       return {
@@ -44,7 +44,8 @@ import { mapGetters } from 'vuex'
         allUsersCount: 'allUsersCount', 
         countOfSeoul: 'countOfSeoul', 
         percentOfSeoul: 'percentOfSeoul'
-      })
+      }),
+      ...mapState(['allUsers'])
     },
     mounted() {
       EventBus.$on('signUp', users => {
