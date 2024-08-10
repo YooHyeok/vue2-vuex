@@ -77,7 +77,7 @@ export default new Vuex.Store({
     },
     getters: {
       // dataCnt: function(state) {
-      dataCnt: function(state) {
+      dataCnt(state) {
         return state.dataList.length
       }
     },
@@ -91,7 +91,27 @@ export default new Vuex.Store({
     </div>
   </template>
   ```
+  ```js
+  import Vue from 'vue'
+  import Vuex from 'vuex'
 
+  Vue.use(Vuex)
+
+  export default new Vuex.Store({
+    state: {
+      dataList: ["데이터1","데이터2","데이터3"]
+    },
+    getters: {
+      dataAccum: state => {
+        return state.dataList.filter(data => data === '데이터3').length / 3 * 100;
+      },
+      dataResult: (state, getters)=> {
+        return Math.round(getters.dataAccum);
+      },
+    },
+  })
+  ```
+  위와 같이 두번째 매개변수로 getters 속성에 접근하여 함수를 호출할수도 있다.
 
 - mutation: 
 - action: 
