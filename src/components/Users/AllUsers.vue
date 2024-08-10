@@ -39,7 +39,12 @@ import { mapGetters } from 'vuex'
       }
     },
     computed: {
-      ...mapGetters(['allUsersCount', 'countOfSeoul', 'percentOfSeoul'])
+      // ...mapGetters(['allUsersCount', 'countOfSeoul', 'percentOfSeoul'])
+      ...mapGetters({
+        allUsersCount: 'allUsersCount', 
+        countOfSeoul: 'countOfSeoul', 
+        percentOfSeoul: 'percentOfSeoul'
+      })
     },
     mounted() {
       EventBus.$on('signUp', users => {
