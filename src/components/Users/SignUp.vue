@@ -41,6 +41,7 @@ import { mapMutations } from 'vuex'
     },
     methods: {
       ...mapMutations(['addUsers']),
+      ...mapMutations({usersAdd:'addUsers'}),
       signUp() {
         let userObj = {
           userId: this.userId,
@@ -51,6 +52,7 @@ import { mapMutations } from 'vuex'
         }
         // EventBus.$emit('signUp', userObj)
         this.addUsers(userObj)
+        this.usersAdd(userObj)
         this.clearForm()
       },
       clearForm() {
