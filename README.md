@@ -287,5 +287,18 @@ export default new Vuex.Store({
       }
     </script>
     ```
+    ### commit을 통한 mutation 호출
+      ```vue
+      <script>
+      export default {
+        methods: {
+          pushData() {
+            this.$store.commit('dataPush','데이터4'); //mutation 호출 payload: '데이터4'
+          }
+        }
+      }
+      </script>
+      ```
+
 
 - action: 
