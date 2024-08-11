@@ -7,7 +7,7 @@
     <h3>Seoul Users: {{countOfSeoul}} ({{ percentOfSeoul }})%</h3>
     <v-list two-line>
       <v-list-tile 
-        v-for=" (user, index) in /*$store.state.allUsers*/ allUsers /* data가 아닌 mapState로 store state 접근 */ "
+        v-for=" (user, index) in /*$store.state.allUsers*/ /*allUsers*/ totalUsers "
         :key="index"
         avatar
       >
@@ -45,7 +45,10 @@ import { mapState, mapGetters } from 'vuex'
         countOfSeoul: 'countOfSeoul', 
         percentOfSeoul: 'percentOfSeoul'
       }),
-      ...mapState(['allUsers'])
+      // ...mapState(['allUsers']) // data와 중복되면 콘솔에 warn으로 출력된다.
+      ...mapState({        
+        totalUsers: 'allUsers',
+    })
     },
     mounted() {
       EventBus.$on('signUp', users => {
