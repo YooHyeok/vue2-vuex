@@ -220,5 +220,72 @@ export default new Vuex.Store({
   </script>
   ```
 
-- mutation: 
+- ## `mutation`  
+  한글 공식문서에서는 변이 라고 설명되며, 말 그대로 state값을 변화시키는 역할을 한다.  
+  컴포넌트 내 어떤 함수를 통해 state에 있는 dataList 값을 직접 변화시키는 것이 아니라, mutation을 사용하여 동작하도록 한다.  
+  컴포넌트 내에서도 state의 직접적인 변화를 유도할 수 있는데 mutation이 왜 필요한것일까?  
+  여러 컴포넌트에서 하나의 동일한 state를 공유하고 있고, 각각의 컴포넌트에서 state를 변경하는 기능이 존재한다면?  
+  해당 기능이 같은 기능을 하는 함수라고 하면 똑같은 기능을 하는 함수인데도, 각 컴포넌트에 동일하게 선언해야 하는 불편함이 있기 때문이다.  
+  같은 기능을 하는 함수를 mutation내에 만들어 놓고 해당 mutation을 각각의 컴포넌트에서 실행시키는 것이다.  
+  이렇게 실행시키는 방식을 `commit` 이라고 부른다.  
+  각각의 컴포넌트 내에서 함수들로 state에 접근하는 것이 아니라, 각각의 컴포넌트내에서 mutation내에 저장되어 있는 함수를 `commit` 해서 state값을 변화시킨다.  
+  이렇게 되면 같은 기능을 하는 함수들을 각각의 컴포넌트에 선언하지 않고 mutation을 불러오기만 하면 되므로 훨씬 더 코드를 간단하게 작성할 수 있게 된다.  
+  일반적으로 commit의 뜻은 (공개적으로) 의사[결정]를 밝히다 라는 의미로, state를 변경 하겠다는 의사를 vuex에게 밝히고, vuex가 그 결정에 맞게 state를 변경해 주는것이다.  
+  **mutation(변경의사) → state(변경반영) → getters(반영전달) ← COMPONNENTS**
+  - store.js
+    ```js
+    import Vue from 'vue'
+    import Vuex from 'vuex'
+
+    Vue.use(Vuex)
+
+    export default new Vuex.Store({
+      state: {
+        dataList: ["데이터1","데이터2","데이터3"]
+      },
+      mutations: {
+        dataPush: (state, payload) => {
+          state.dataList.push(payload)
+        }
+      }
+    })
+    ```
+    매개변수는 첫번째 인자로 state와 두번째 인자로 payload를 받는다.  
+    payload는 mutations에 선언된 함수를 호출할 때 넘겨주는 인자이다.  
+    ### mapMutations
+    mutation은 실행하는 함수이기 때문에 mapMutations는 다른 mapStates, mapGetters에서 computed에 선언했던 방식을 따르지 않고 methods에서 전개식을 통해 호출한다.
+    ```vue
+    <script>
+    import { mapMutations } from 'vuex'
+    export default {
+      methods: {
+        ...mapMutations('dataPush'),
+        pushData() {
+          this.dataPush('데이터4'); //mutation 호출 payload: '데이터4'
+        }
+
+      }
+    }
+    </script>
+    ```
+    #### 객체 형태로도 사용 가능
+    만약 컴포넌트내 methods 훅에 선언한 함수명과 일치한다면 콘솔에 아래와 같은 에러가 출력된다.  
+    `컴포넌트명.vue:28 [Vue warn]: The computed property "dataCount" is already defined as a method.`  
+    아래 코드 예시와 같이 객체 형태로 함수명에 대한 property를 바꿀수 있다.
+    ```vue
+    <script>
+    import { mapMutations } from 'vuex'
+      export default {
+        methods: {
+            ...mapMutations({
+            pushData: 'dataPush', 
+          })
+        },
+        dataPush() {
+          this.pushData({'데이터4'});
+        }
+      }
+    </script>
+    ```
+
 - action: 
