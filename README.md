@@ -52,6 +52,48 @@ export default new Vuex.Store({
   }
   </script>
   ```
+
+  #### mapState
+  state의 map()을 제공해준다는 의미로, store.js 파일의 state에 선언되어있는 변수들을 쉽게 접근해서 사용할 수 있도록 도와준다.  
+  컴포넌트 파일의 script태그 내에 vuex로부터 mapState를 import하고 `coumputed`훅을 통해 사용한다.  
+  문법이 좀 특이한데, 전개식을 통해 import한 mapmapState를 전개하여 배열 형태로 state에 선언한 메소드중 사용할 메소드명을 String 문자열로 담아준다.  
+  - .vue 파일 예제
+    ```vue
+    <template>
+      <div>
+        <h3>dataList: {{dataList}} </h3>
+      </div>
+    </template>
+
+    <script>
+    import { mapState } from 'vuex'
+      export default {
+        computed: {
+          ...mapState(['dataList'])
+        }
+      }
+    </script>
+    ```
+  #### 객체 형태로도 사용 가능
+  만약 컴포넌트내 data 변수와 변수명이 일치한다면 콘솔에 아래와 같은 에러가 출력된다.  
+  `[Vue warn]: The computed property "dataList" is already defined in data.`  
+  아래 코드 예시와 같이 객체 형태로 변수명에 대한 property를 바꿀수 있다.
+  ```vue
+  <template>
+    <div>
+      <h3>dataList: {{datas}} </h3>
+    </div>
+  </template>
+
+  <script>
+  import { mapState } from 'vuex'
+    export default {
+      computed: {
+        ...mapState({datas: 'dataList'})
+      }
+    }
+  </script>
+  ```
 - ## `getters`  
   중앙 통제 관리 저장소 구조에서 발생할 수 있는 흔한 문제점 중 하나로 컴포넌트에서 vuex의 데이터에 접근할 때 중복된 코드를 반복 호출하게 되며, 이를 위해서 Getters 라는 것이 존재한다.  
   ```vue
@@ -119,42 +161,45 @@ export default new Vuex.Store({
   컴포넌트 파일의 script태그 내에 vuex로부터 mapGetters를 import하고 `coumputed`훅을 통해 사용한다.  
   문법이 좀 특이한데, 전개식을 통해 import한 mapGetters를 전개하여 배열 형태로 getters에 선언한 메소드중 사용할 메소드명을 String 문자열로 담아준다.  
   - .vue 파일 예제
-  ```vue
-  <template>
-    <div>
-      <h3>data: {{dataCount}} ({{ dataPercent }})%</h3>
-    </div>
-  </template>
+    ```vue
+    <template>
+      <div>
+        <h3>data: {{dataCount}} ({{ dataPercent }})%</h3>
+      </div>
+    </template>
 
-  <script>
-  import { mapGetters } from 'vuex'
-    export default {
-      computed: {
-        ...mapGetters(['dataCount', 'dataPercent'])
+    <script>
+    import { mapGetters } from 'vuex'
+      export default {
+        computed: {
+          ...mapGetters(['dataCount', 'dataPercent'])
+        }
       }
-    }
-  </script>
-  ```
-  전개식 문법을 사용한 mapGetters 함수는 객체형태인 것으로 예측할 수 있고, mapGetters의 배열 인자로 담은 String 메소드명을 getters로 부터 매핑하여 해당 객체에 각각 매핑하는 것으로 예측할 수 있다.
+    </script>
+    ```
+    전개식 문법을 사용한 mapGetters 함수는 객체형태인 것으로 예측할 수 있고, mapGetters의 배열 인자로 담은 String 메소드명을 getters로 부터 매핑하여 해당 객체에 각각 매핑하는 것으로 예측할 수 있다.
 
   - `...mapGetters(['dataCount', 'dataPercent'])` 결과 예측 코드
-  ```vue
-  <template>
-    <div>
-      <h3>data: {{dataCount}} ({{ dataPercent }})%</h3>
-    </div>
-  </template>
+    ```vue
+    <template>
+      <div>
+        <h3>data: {{dataCount}} ({{ dataPercent }})%</h3>
+      </div>
+    </template>
 
-  <script>
-    export default {
-      computed: {
-        dataCount: function(){return this.$store.getters.allUsersCount}
-        dataPercent: function(){return this.$store.getters.dataPercent}
+    <script>
+      export default {
+        computed: {
+          dataCount: function(){return this.$store.getters.allUsersCount}
+          dataPercent: function(){return this.$store.getters.dataPercent}
+        }
       }
-    }
-  </script>
-  ```
+    </script>
+    ```
   #### 객체 형태로도 사용 가능
+  만약 컴포넌트내 methods 훅에 선언한 함수명과 일치한다면 콘솔에 아래와 같은 에러가 출력된다.  
+  `컴포넌트명.vue:28 [Vue warn]: The computed property "dataCount" is already defined as a method.`  
+  아래 코드 예시와 같이 객체 형태로 함수명에 대한 property를 바꿀수 있다.
   ```vue
   <template>
     <div>
@@ -174,4 +219,6 @@ export default new Vuex.Store({
     }
   </script>
   ```
-성에 접근하여 함수를 호출할수도 있다.
+
+- mutation: 
+- action: 
