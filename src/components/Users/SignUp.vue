@@ -44,7 +44,7 @@ import { mapActions } from 'vuex'
       // ...mapMutations(['addUsers']),
       // ...mapMutations({usersAdd:'addUsers'}),
       // ...mapActions(['addUsers']),
-      ...mapActions({usersAdd:'addUsers'}),
+      // ...mapActions({usersAdd:'addUsers'}),
       signUp() {
         let userObj = {
           userId: this.userId,
@@ -56,13 +56,14 @@ import { mapActions } from 'vuex'
         // EventBus.$emit('signUp', userObj)
         // this.addUsers(userObj)
 
-        /* mutation */
+        /* mutations */
         // this.usersAdd(userObj) //mapMutation
         // this.$store.commit('addUsers', userObj)
 
-        /* action */
+        /* actions */
         // this.addUser(userObj) //mapActions
-        this.usersAdd(userObj) //mapActions
+        // this.usersAdd(userObj) //mapActions
+        this.store.dispatch('addUsers',userObj)
         this.clearForm()
       },
       clearForm() {
