@@ -34,8 +34,11 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    addUsers: context =>  {
+    /* addUsers: context =>  {
       context.commit('addUsers') //mutations addUsers 실행
+    } */
+    addUsers: ({ commit }) =>  { //구조분해 할당 - context = {commit: function(){}} (context.commit과 같은 형태..)
+      commit('addUsers') //mutations addUsers 실행
     }
   }
 })
