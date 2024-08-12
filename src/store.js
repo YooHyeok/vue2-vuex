@@ -34,6 +34,8 @@ export default new Vuex.Store({
     }
   },
   actions: {
-
+    addUsers: context =>  {
+      context.commit('addUsers') //mutations addUsers 실행
+    }
   }
 })
