@@ -43,7 +43,8 @@ import { mapActions } from 'vuex'
     methods: {
       // ...mapMutations(['addUsers']),
       // ...mapMutations({usersAdd:'addUsers'}),
-      ...mapActions(['addUsers']),
+      // ...mapActions(['addUsers']),
+      ...mapActions({usersAdd:'addUsers'}),
       signUp() {
         let userObj = {
           userId: this.userId,
@@ -60,7 +61,8 @@ import { mapActions } from 'vuex'
         // this.$store.commit('addUsers', userObj)
 
         /* action */
-        this.addUser(userObj) //mapActions
+        // this.addUser(userObj) //mapActions
+        this.usersAdd(userObj) //mapActions
         this.clearForm()
       },
       clearForm() {
