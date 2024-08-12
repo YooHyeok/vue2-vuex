@@ -384,3 +384,15 @@ export default new Vuex.Store({
       }
     </script>
     ```
+    ### dispatch를 통한 mutation 호출
+      ```vue
+      <script>
+      export default {
+        methods: {
+          pushData() {
+            this.$store.dispatch('dataPush','데이터4'); //mutation 호출 payload: '데이터4'
+          }
+        }
+      }
+      </script>
+      ```
