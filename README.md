@@ -203,7 +203,7 @@ export default new Vuex.Store({
   ```vue
   <template>
     <div>
-      <h3>data: {{dataCount}} ({{ dataPercent }})%</h3>
+      <h3>data: {{countData}} ({{ percentData }})%</h3>
     </div>
   </template>
   <script>
@@ -211,9 +211,8 @@ export default new Vuex.Store({
     export default {
       computed: {
         ...mapGetters({
-          allUsersCount: 'allUsersCount', 
-          countOfSeoul: 'countOfSeoul', 
-          percentOfSeoul: 'percentOfSeoul'
+          countData: 'dataCount', 
+          percentData: 'dataPercent', 
       })
       }
     }
@@ -259,7 +258,7 @@ export default new Vuex.Store({
     import { mapMutations } from 'vuex'
     export default {
       methods: {
-        ...mapMutations('dataPush'),
+        ...mapMutations(['dataPush']),
         pushData() {
           this.dataPush('데이터4'); //mutation 호출 payload: '데이터4'
         }
@@ -270,7 +269,7 @@ export default new Vuex.Store({
     ```
     #### 객체 형태로도 사용 가능
     만약 컴포넌트내 methods 훅에 선언한 함수명과 일치한다면 콘솔에 아래와 같은 에러가 출력된다.  
-    `컴포넌트명.vue:28 [Vue warn]: The computed property "dataCount" is already defined as a method.`  
+    `컴포넌트명.vue:28 [Vue warn]: The computed property "dataPush" is already defined as a method.`  
     아래 코드 예시와 같이 객체 형태로 함수명에 대한 property를 바꿀수 있다.
     ```vue
     <script>
@@ -282,7 +281,7 @@ export default new Vuex.Store({
           })
         },
         dataPush() {
-          this.pushData({'데이터4'});
+          this.pushData('데이터4');
         }
       }
     </script>
@@ -301,4 +300,87 @@ export default new Vuex.Store({
       ```
 
 
-- action: 
+- ## `actions` 
+  mutation은 모든 기능이 동기로 동작하도록 필요에 의해서 기능을 제한시켰다.  
+  mutation의 역할은 state를 변화시키고 관리하는것이다.  
+  mutation을 통한 state 관리하는 것은 하나의 데이터에 여러개의 컴포넌트가 접근하려고 할 때 효율적으로 관리하기 위함이다.  
+  하나의 state에 여러 컴포넌트들이 접근하면서 mutation에 비동기 로직들이 포함되면 같은 값에 대해 여러개의 컴포넌트에서 변경을 요청 했을 때 그 순서를 정확하게 알기 어렵다.  
+  따라서 이러한 것들을 막기 위해 비동기 로직은 actions 라는 곳에서 처리하게 된다.  
+  단순하게 생각해보면 state를 변화시키는 것은 일단 mutation에 선언하고, mutation을 동작시키는 `비즈니스 로직`(validation 등)을 action에 넣으면 된다.    
+  - **[Mutations]**  
+   **mutation(변경의사) → state(변경반영) → getters(반영전달) ← COMPONNENTS**
+  - **[Actions]**  
+  **actions → mutation(변경의사) → state(변경반영) → getters(반영전달) ← COMPONNENTS**  
+  mutation을 발생시키는 commit과 같이 actions를 실행시키는 것은 `dispatch`라고 한다.  
+  dispatch를 통해 actions를 실행하고, actions 내에서 mutations를 commit한 후 mutation이 state를 변화시키게 된다.  
+  dispatch의 일반적인 의미로는 보내다, 파견하다 라는 뜻으로 actions에 어떠한 신호를 보낸다 라는 생각으로 사용하면 된다.  
+  - store.js
+    ```js
+    import Vue from 'vue'
+    import Vuex from 'vuex'
+
+    Vue.use(Vuex)
+
+    export default new Vuex.Store({
+      state: {
+        dataList: ["데이터1","데이터2","데이터3"]
+      },
+      mutations: {
+        dataPush: (state, payload) => {
+          state.dataList.push(payload)
+        }
+      },
+      actions: {
+        /* dataPush: context =>  {
+          // 비즈니스 로직
+          context.commit('dataPush') //mutations addUsers 실행
+        }
+        dataPush: (context,payload) =>  {
+          // 비즈니스 로직
+          context.commit('dataPush') //mutations addUsers 실행
+        }
+        dataPush: ({ commit }) =>  { // context.commit과 같은 형태..
+          // 비즈니스 로직
+          commit('dataPush') //mutations addUsers 실행
+        } */
+        dataPush: ({ commit }, payload) =>  {
+          // 비즈니스 로직
+          commit('dataPush', payload) //mutations addUsers 실행
+        }
+      }
+    })
+    ```
+    
+    ### mapActions
+      ```vue
+    <script>
+    import { mapActions } from 'vuex'
+    export default {
+      methods: {
+        ...mapActions(['dataPush']),
+        pushData() {
+          this.dataPush('데이터4'); //mutation 호출 payload: '데이터4'
+        }
+      }
+    }
+    </script>
+    ```
+    #### 객체 형태로도 사용 가능
+    만약 컴포넌트내 methods 훅에 선언한 함수명과 일치한다면 콘솔에 아래와 같은 에러가 출력된다.  
+    `컴포넌트명.vue:28 [Vue warn]: The computed property "dataPush" is already defined as a method.`  
+    아래 코드 예시와 같이 객체 형태로 함수명에 대한 property를 바꿀수 있다.
+    ```vue
+    <script>
+    import { mapActions } from 'vuex'
+      export default {
+        methods: {
+            ...mapActions({
+            pushData: 'dataPush', 
+          })
+        },
+        dataPush() {
+          this.pushData('데이터4');
+        }
+      }
+    </script>
+    ```
